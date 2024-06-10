@@ -1,1 +1,207 @@
-welcome to world
+
+SQL*Plus: Release 21.0.0.0.0 - Production on Mon Jun 10 15:34:36 2024
+Version 21.3.0.0.0
+
+Copyright (c) 1982, 2021, Oracle.  All rights reserved.
+
+Enter user-name: system
+Enter password:
+Last Successful login time: Fri Jun 07 2024 09:22:28 +05:30
+
+Connected to:
+Oracle Database 21c Express Edition Release 21.0.0.0.0 - Production
+Version 21.3.0.0.0
+
+SQL> CREATE TABLE department(deptid number(3) PRIMARY KEY, deptname varchar(20)NOT NULL UNIQUE);
+
+Table created.
+
+SQL> DESC department;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DEPTID                                    NOT NULL NUMBER(3)
+ DEPTNAME                                  NOT NULL VARCHAR2(20)
+
+SQL> ALTER TABLE employee ADD empid number(5);
+ALTER TABLE employee ADD empid number(5)
+*
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> ALTER TABLE department ADD empid number(5);
+
+Table altered.
+
+SQL> DESC department;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DEPTID                                    NOT NULL NUMBER(3)
+ DEPTNAME                                  NOT NULL VARCHAR2(20)
+ EMPID                                              NUMBER(5)
+
+SQL> ALTER TABLE department ADD empid number(5) NOT NULL;
+ALTER TABLE department ADD empid number(5) NOT NULL
+                           *
+ERROR at line 1:
+ORA-01430: column being added already exists in table
+
+
+SQL> ALTER TABLE department MODIFY empid number(5) NOT NULL;
+
+Table altered.
+
+SQL> DESC department;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DEPTID                                    NOT NULL NUMBER(3)
+ DEPTNAME                                  NOT NULL VARCHAR2(20)
+ EMPID                                     NOT NULL NUMBER(5)
+
+SQL> INSERT department VALUES (101,'Information Technology',10001);
+INSERT department VALUES (101,'Information Technology',10001)
+       *
+ERROR at line 1:
+ORA-00925: missing INTO keyword
+
+
+SQL> INSERT INTO department VALUES (101,'Information Technology',10001);
+INSERT INTO department VALUES (101,'Information Technology',10001)
+                                   *
+ERROR at line 1:
+ORA-12899: value too large for column "SYSTEM"."DEPARTMENT"."DEPTNAME" (actual:
+22, maximum: 20)
+
+
+SQL> INSERT INTO department VALUES (101,'SALES',10001);
+
+1 row created.
+
+SQL> INSERT INTO department VALUES (102,'MARKETING',10002);
+
+1 row created.
+
+SQL> SELECT* FROM department DISPLAY;
+
+    DEPTID DEPTNAME                  EMPID
+---------- -------------------- ----------
+       101 SALES                     10001
+       102 MARKETING                 10002
+
+SQL> CREATE TABLE employee(empid number(5) PRIMARY KEY FOREIGN KEY REFERENCES department(empid),name varchar(20) NOT NULL,salary number(10,2) CHECK(salary>0));
+CREATE TABLE employee(empid number(5) PRIMARY KEY FOREIGN KEY REFERENCES department(empid),name varchar(20) NOT NULL,salary number(10,2) CHECK(salary>0))
+                                                  *
+ERROR at line 1:
+ORA-00907: missing right parenthesis
+
+
+SQL> CREATE TABLE employee(empid number(5) PRIMARY KEY REFERENCES department(empid),name varchar(20) NOT NULL,salary number(10,2) CHECK(salary>0));
+CREATE TABLE employee(empid number(5) PRIMARY KEY REFERENCES department(empid),name varchar(20) NOT NULL,salary number(10,2) CHECK(salary>0))
+                                                                        *
+ERROR at line 1:
+ORA-02270: no matching unique or primary key for this column-list
+
+
+SQL> ALTER TABLE department MODIFY empid number(5) PRIMARY KEY;
+ALTER TABLE department MODIFY empid number(5) PRIMARY KEY
+                                              *
+ERROR at line 1:
+ORA-02260: table can have only one primary key
+
+
+SQL> ALTER TABLE department MODIFY deptid number(3);
+
+Table altered.
+
+SQL> ALTER TABLE department MODIFY empid number(5) PRIMARY KEY;
+ALTER TABLE department MODIFY empid number(5) PRIMARY KEY
+                                              *
+ERROR at line 1:
+ORA-02260: table can have only one primary key
+
+
+SQL> DESC department;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DEPTID                                    NOT NULL NUMBER(3)
+ DEPTNAME                                  NOT NULL VARCHAR2(20)
+ EMPID                                     NOT NULL NUMBER(5)
+
+SQL> ALTER TABLE department DROP COLUMN deptid;
+
+Table altered.
+
+SQL> DESC department;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DEPTNAME                                  NOT NULL VARCHAR2(20)
+ EMPID                                     NOT NULL NUMBER(5)
+
+SQL> ALTER TABLE department MODIFY empid number(5) PRIMARY KEY;
+
+Table altered.
+
+SQL> DESC department;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DEPTNAME                                  NOT NULL VARCHAR2(20)
+ EMPID                                     NOT NULL NUMBER(5)
+
+SQL> CREATE TABLE employee(empid number(5) PRIMARY KEY REFERENCES department(empid),name varchar(20) NOT NULL,salary number(10,2) CHECK(salary>0));
+
+Table created.
+
+SQL> DESC employee;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPID                                     NOT NULL NUMBER(5)
+ NAME                                      NOT NULL VARCHAR2(20)
+ SALARY                                             NUMBER(10,2)
+
+SQL> INSERT INTO employee VALUES (10001,'AJAY',500000);
+
+1 row created.
+
+SQL> SELECT* FROM employee DISPLAY;
+
+     EMPID NAME                     SALARY
+---------- -------------------- ----------
+     10001 AJAY                     500000
+
+SQL> SELECT* FROM department DISPLAY;
+
+DEPTNAME                  EMPID
+-------------------- ----------
+SALES                     10001
+MARKETING                 10002
+
+SQL> ALTER TABLE employee ADD (DOJ date, age number(3) DEFAULT 21);
+
+Table altered.
+
+SQL> DESC employee;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPID                                     NOT NULL NUMBER(5)
+ NAME                                      NOT NULL VARCHAR2(20)
+ SALARY                                             NUMBER(10,2)
+ DOJ                                                DATE
+ AGE                                                NUMBER(3)
+
+SQL> SELECT* FROM employee DISPLAY;
+
+     EMPID NAME                     SALARY DOJ              AGE
+---------- -------------------- ---------- --------- ----------
+     10001 AJAY                     500000                   21
+
+SQL> UPDATE employee SET doj= '12-JUN-2024' WHERE empid=10001;
+
+1 row updated.
+
+SQL> SELECT* FROM employee DISPLAY;
+
+     EMPID NAME                     SALARY DOJ              AGE
+---------- -------------------- ---------- --------- ----------
+     10001 AJAY                     500000 12-JUN-24         21
+
+SQL>
