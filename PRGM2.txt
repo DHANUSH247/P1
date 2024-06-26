@@ -1,0 +1,148 @@
+
+SQL*Plus: Release 21.0.0.0.0 - Production on Wed Jun 26 15:16:10 2024
+Version 21.3.0.0.0
+
+Copyright (c) 1982, 2021, Oracle.  All rights reserved.
+
+Enter user-name: system
+Enter password:
+Last Successful login time: Mon Jun 24 2024 09:09:34 +05:30
+
+Connected to:
+Oracle Database 21c Express Edition Release 21.0.0.0.0 - Production
+Version 21.3.0.0.0
+
+SQL> CREATE TABLE EMPLOYEES (EMPLOYEE_ID NUMBER PRIMARY KEY, FIRST_NAME VARCHAR2(50), LAST_NAME VARCHAR(50), EMAIL VARCHAR VARCHAR2(100));
+CREATE TABLE EMPLOYEES (EMPLOYEE_ID NUMBER PRIMARY KEY, FIRST_NAME VARCHAR2(50), LAST_NAME VARCHAR(50), EMAIL VARCHAR VARCHAR2(100))
+                                                                                                                      *
+ERROR at line 1:
+ORA-00906: missing left parenthesis
+
+
+SQL> CREATE TABLE EMPLOYEES (EMPLOYEE_ID NUMBER PRIMARY KEY, FIRST_NAME VARCHAR2(50), LAST_NAME VARCHAR(50), EMAIL VARCHAR2(100));
+
+Table created.
+
+SQL> DESC EMPLOYEES;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPLOYEE_ID                               NOT NULL NUMBER
+ FIRST_NAME                                         VARCHAR2(50)
+ LAST_NAME                                          VARCHAR2(50)
+ EMAIL                                              VARCHAR2(100)
+
+SQL> INSERT INTO EMPLOYEES VALUES (102, 'VIKAAS', 'SELVAM', '23107131@SRCAS.AC.IN');
+
+1 row created.
+
+SQL> INSERT INTO EMPLOYEES VALUES (103, 'TARUN', 'VELUMANI', '23107129@SRCAS.AC.IN');
+
+1 row created.
+
+SQL> UPDATE EMPLOYEES SET EMAIL = 'VIKAAS@GMAIL.COM' WHERE EMPLOYEE_ID=102;
+
+1 row updated.
+
+SQL> SELECT* FROM EMPLOYEES DISPLAY;
+
+EMPLOYEE_ID FIRST_NAME
+----------- --------------------------------------------------
+LAST_NAME
+--------------------------------------------------
+EMAIL
+--------------------------------------------------------------------------------
+        102 VIKAAS
+SELVAM
+VIKAAS@GMAIL.COM
+
+        103 TARUN
+VELUMANI
+23107129@SRCAS.AC.IN
+
+EMPLOYEE_ID FIRST_NAME
+----------- --------------------------------------------------
+LAST_NAME
+--------------------------------------------------
+EMAIL
+--------------------------------------------------------------------------------
+
+
+SQL> SAVEPOINT SAVEPOINT1;
+
+Savepoint created.
+
+SQL> DELETE FROM EMPLOYEES WHERE EMPLOYEE_ID=102;
+
+1 row deleted.
+
+SQL> SELECT* FROM EMPLOYEES DISPLAY;
+
+EMPLOYEE_ID FIRST_NAME
+----------- --------------------------------------------------
+LAST_NAME
+--------------------------------------------------
+EMAIL
+--------------------------------------------------------------------------------
+        103 TARUN
+VELUMANI
+23107129@SRCAS.AC.IN
+
+
+SQL> ROLLBACK TO SAVEPOINT1;
+
+Rollback complete.
+
+SQL> SELECT* FROM EMPLOYEES DISPLAY;
+
+EMPLOYEE_ID FIRST_NAME
+----------- --------------------------------------------------
+LAST_NAME
+--------------------------------------------------
+EMAIL
+--------------------------------------------------------------------------------
+        102 VIKAAS
+SELVAM
+VIKAAS@GMAIL.COM
+
+        103 TARUN
+VELUMANI
+23107129@SRCAS.AC.IN
+
+EMPLOYEE_ID FIRST_NAME
+----------- --------------------------------------------------
+LAST_NAME
+--------------------------------------------------
+EMAIL
+--------------------------------------------------------------------------------
+
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> ALTER TABLE EMPLOYEES ALTER COLUMN (FIRST_NAME VARCHAR2(10), LAST_NAME VARCHAR2(10), EMAIL VARCHAR2(15));
+ALTER TABLE EMPLOYEES ALTER COLUMN (FIRST_NAME VARCHAR2(10), LAST_NAME VARCHAR2(10), EMAIL VARCHAR2(15))
+                      *
+ERROR at line 1:
+ORA-01735: invalid ALTER TABLE option
+
+
+SQL> ALTER TABLE EMPLOYEES MODIFY (FIRST_NAME VARCHAR2(10), LAST_NAME VARCHAR2(10), EMAIL VARCHAR2(15));
+ALTER TABLE EMPLOYEES MODIFY (FIRST_NAME VARCHAR2(10), LAST_NAME VARCHAR2(10), EMAIL VARCHAR2(15))
+                                                                               *
+ERROR at line 1:
+ORA-01441: cannot decrease column length because some value is too big
+
+
+SQL> ALTER TABLE EMPLOYEES MODIFY (FIRST_NAME VARCHAR2(10), LAST_NAME VARCHAR2(10), EMAIL VARCHAR2(20));
+
+Table altered.
+
+SQL> SELECT* FROM EMPLOYEES DISPLAY;
+
+EMPLOYEE_ID FIRST_NAME LAST_NAME  EMAIL
+----------- ---------- ---------- --------------------
+        102 VIKAAS     SELVAM     VIKAAS@GMAIL.COM
+        103 TARUN      VELUMANI   23107129@SRCAS.AC.IN
+
+SQL>
